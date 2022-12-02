@@ -6,19 +6,22 @@ from rest_framework.test import APITestCase
 
 class PostListViewTests(APITestCase):
     def setUp(self):
-        User.objects.create_user(username='adam', password='pass')
+        User.objects.create_user(username='adamthethird', password='passkey123')
 
     def test_can_list_posts(self):
-        adam = User.objects.get(username='adam')
-        Post.objects.create(owner=adam, title='a title')
+        adamthethird = User.objects.get(username='adamthethird')
+        Post.objects.create(owner=adamthethird, title='a title')
         response = self.client.get('/posts/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        print(response.data)
-        print(len(response.data))
 
     def test_logged_in_user_can_create_post(self):
-        self.client.login(username='adam', password='pass')
-        response = self.client.post('/posts/', {'title': 'a title'})
+        self.client.login(username='adamthethird', password='passkey123')
+        adamthethird = User.objects.get(username='adamthethird')
+        response = self.client.post('/posts/', {'title': 'a title', 'owner': adamthethird.id})
         count = Post.objects.count()
-        # self.assertEqual(count, 1)
+        self.assertEqual(count, 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_logged_out_user_cannot_creat_post(self):
+        response = self.client.post('/posts/', {'title': 'a title'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
