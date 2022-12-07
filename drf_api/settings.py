@@ -59,7 +59,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
-   os.environ.get('ALLOWED_HOST'),
+   os.environ.get('ALLOWED_HOSTS'),
    'localhost',
 ]
 
